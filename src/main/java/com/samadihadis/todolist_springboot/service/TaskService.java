@@ -56,4 +56,27 @@ public class TaskService {
         newTask.setDescription(task.getDescription());
         taskRepository.save(newTask);
     }
+
+    public List<Task> getTasksByListId(Long listId) {
+        taskListRepository.findById(listId)
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("لیست با شناسه %d یافت نشد.", listId)
+                ));
+
+        return taskRepository.findByListId(listId);
+    }
+
+    public List<Task> getTasksByState(TaskState state) {
+        return taskRepository.findByTaskState(state);
+    }
+
+    public List<Task> getTasksByListAndState(Long listId, TaskState state) {
+
+        taskListRepository.findById(listId)
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("لیست با شناسه %d یافت نشد.", listId)
+                ));
+
+        return taskRepository.findByListIdAndTaskState(listId, state);
+    }
 }

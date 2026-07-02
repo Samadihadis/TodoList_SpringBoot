@@ -2,6 +2,7 @@ package com.samadihadis.todolist_springboot.controller;
 
 
 import com.samadihadis.todolist_springboot.entity.Task;
+import com.samadihadis.todolist_springboot.enums.TaskState;
 import com.samadihadis.todolist_springboot.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +47,23 @@ public class TaskController {
         return ResponseEntity.ok(
                 String.format("کار با شناسه %d بروزرسانی شد.", id)
         );
+    }
+
+    @GetMapping("/list/{listId}")
+    public ResponseEntity<List<Task>> getTasksByList(@PathVariable Long listId) {
+        return ResponseEntity.ok(taskService.getTasksByListId(listId));
+    }
+
+    @GetMapping("/state/{taskState}")
+    public ResponseEntity<List<Task>> getTasksByState(@PathVariable TaskState taskState) {
+        return ResponseEntity.ok(taskService.getTasksByState(taskState));
+    }
+
+    @GetMapping("/list/{listId}/state/{state}")
+    public ResponseEntity<List<Task>> getTasksByListAndState(
+            @PathVariable Long listId,
+            @PathVariable TaskState state
+    ) {
+        return ResponseEntity.ok(taskService.getTasksByListAndState(listId, state));
     }
 }
