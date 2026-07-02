@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/taskLists")
+@RequestMapping("/api/lists")
 public class TaskListController {
 
     private final TaskListService taskListService;
@@ -37,6 +37,14 @@ public class TaskListController {
         taskListService.deleteTaskList(id);
         return ResponseEntity.ok(
                 String.format("لیست کار با شناسه %d حذف شد.", id)
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTaskList(@RequestBody TaskList taskList, @PathVariable Long id) {
+        taskListService.updateTaskList(id , taskList);
+        return ResponseEntity.ok(
+                String.format("لیست کارها با شناسه %d بروزرسانی شد.", id)
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.samadihadis.todolist_springboot.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.samadihadis.todolist_springboot.enums.TaskState;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,5 +29,6 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "list_id" , nullable = false)
+    @JsonBackReference
     private TaskList list;
 }

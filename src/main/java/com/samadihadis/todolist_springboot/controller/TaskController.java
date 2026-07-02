@@ -39,4 +39,12 @@ public class TaskController {
                 String.format("کار با شناسه %d از لیست کارها حذف شد.", id)
         );
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTask(@RequestBody Task task,@PathVariable Long id) {
+        taskService.updateTask(id , task);
+        return ResponseEntity.ok(
+                String.format("کار با شناسه %d بروزرسانی شد.", id)
+        );
+    }
 }

@@ -3,6 +3,7 @@ package com.samadihadis.todolist_springboot.service;
 
 import com.samadihadis.todolist_springboot.entity.Task;
 import com.samadihadis.todolist_springboot.entity.TaskList;
+import com.samadihadis.todolist_springboot.enums.TaskState;
 import com.samadihadis.todolist_springboot.repository.TaskListRepository;
 import com.samadihadis.todolist_springboot.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,9 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException(
                         String.format("لیست با شناسه %d یافت نشد.", listId)
                 ));
+        if (task.getTaskState() == null) {
+            task.setTaskState(TaskState.PENDING);
+        }
         task.setList(taskList);
         return taskRepository.save(task);
     }
@@ -41,5 +45,15 @@ public class TaskService {
     public void deleteTask(Long id) {
         getTaskById(id);
         taskRepository.deleteById(id);
+    }
+
+    public void updateTask(Long id, Task task) {
+        Task newTask = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("کار با شناسه %d یافت نشد.", id)
+                ));
+        newTask.setTitle(task.getTitle());
+        newTask.setDescription(task.getDescription());
+        taskRepository.save(newTask);
     }
 }

@@ -1,6 +1,7 @@
 package com.samadihadis.todolist_springboot.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,6 @@ public class TaskList {
     private LocalDate createdAt;
 
     @OneToMany(mappedBy = "list")
+    @JsonManagedReference
     private List<Task> tasks;
 }

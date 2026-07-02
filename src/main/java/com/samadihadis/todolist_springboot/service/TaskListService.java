@@ -34,4 +34,14 @@ public class TaskListService {
         taskListRepository.deleteById(id);
     }
 
+    public void updateTaskList(Long id, TaskList taskList) {
+        TaskList newTaskList = taskListRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("کار با شناسه %d یافت نشد.", id)
+                ));
+        newTaskList.setName(taskList.getName());
+        newTaskList.setDescription(taskList.getDescription());
+        taskListRepository.save(newTaskList);
+    }
+
 }
