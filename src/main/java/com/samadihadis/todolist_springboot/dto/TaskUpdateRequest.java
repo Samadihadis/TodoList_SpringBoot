@@ -7,10 +7,7 @@ import lombok.Data;
 @Data
 public class TaskUpdateRequest {
 
-    @NotBlank(message = "عنوان نمی‌تواند خالی باشد")
     private String title;
-
     private String description;
-
     private TaskState state;
 }
