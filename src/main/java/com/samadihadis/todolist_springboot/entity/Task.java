@@ -4,16 +4,16 @@ package com.samadihadis.todolist_springboot.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.samadihadis.todolist_springboot.enums.TaskState;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Task {
 
     @Id
@@ -25,10 +25,15 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TaskState taskState = TaskState.PENDING;
+    private TaskState taskState;
 
     @ManyToOne
     @JoinColumn(name = "list_id" , nullable = false)
     @JsonBackReference
     private TaskList list;
+
+    @PrePersist
+    public void prePersistTaskState() {
+        this.taskState = TaskState.PENDING;
+    }
 }

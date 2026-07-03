@@ -1,9 +1,13 @@
 package com.samadihadis.todolist_springboot.controller;
 
 
+import com.samadihadis.todolist_springboot.dto.TaskRequest;
+import com.samadihadis.todolist_springboot.dto.TaskResponse;
+import com.samadihadis.todolist_springboot.dto.TaskUpdateRequest;
 import com.samadihadis.todolist_springboot.entity.Task;
 import com.samadihadis.todolist_springboot.enums.TaskState;
 import com.samadihadis.todolist_springboot.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +22,12 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping("/{listId}")
-    public ResponseEntity<?> createTask(@RequestBody Task task, @PathVariable Long listId) {
-        Task savedTask = taskService.createTask(listId, task);
-        return ResponseEntity.ok(savedTask);
+    public ResponseEntity<TaskResponse> createTask(
+            @Valid @RequestBody TaskRequest taskRequest,
+            @PathVariable Long listId
+    ) {
+        TaskResponse response = taskService.createTask(listId, taskRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
@@ -42,8 +49,11 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTask(@RequestBody Task task,@PathVariable Long id) {
-        taskService.updateTask(id , task);
+    public ResponseEntity<?> updateTask(
+            @Valid @RequestBody TaskUpdateRequest request,
+            @PathVariable Long id
+    ) {
+        taskService.updateTask(id, request);
         return ResponseEntity.ok(
                 String.format("کار با شناسه %d بروزرسانی شد.", id)
         );

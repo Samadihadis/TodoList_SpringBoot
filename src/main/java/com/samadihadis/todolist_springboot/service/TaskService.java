@@ -1,6 +1,9 @@
 package com.samadihadis.todolist_springboot.service;
 
 
+import com.samadihadis.todolist_springboot.dto.TaskRequest;
+import com.samadihadis.todolist_springboot.dto.TaskResponse;
+import com.samadihadis.todolist_springboot.dto.TaskUpdateRequest;
 import com.samadihadis.todolist_springboot.entity.Task;
 import com.samadihadis.todolist_springboot.entity.TaskList;
 import com.samadihadis.todolist_springboot.enums.TaskState;
@@ -18,17 +21,26 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskListRepository taskListRepository;
 
-    public Task createTask(Long listId, Task task) {
+    public TaskResponse createTask(Long listId, TaskRequest request) {
 
         TaskList taskList = taskListRepository.findById(listId)
-                .orElseThrow(() -> new RuntimeException(
-                        String.format("لیست با شناسه %d یافت نشد.", listId)
-                ));
-        if (task.getTaskState() == null) {
-            task.setTaskState(TaskState.PENDING);
-        }
-        task.setList(taskList);
-        return taskRepository.save(task);
+                .orElseThrow(() -> new RuntimeException("لیست پیدا نشد"));
+
+        Task task = Task.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .list(taskList)
+                .build();
+
+        Task saved = taskRepository.save(task);
+
+        return TaskResponse.builder()
+                .id(saved.getId())
+                .title(saved.getTitle())
+                .description(saved.getDescription())
+                .state(saved.getTaskState())
+                .taskListName(taskList.getName())
+                .build();
     }
 
     public List<Task> getAllTasks() {
@@ -47,14 +59,17 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
-    public void updateTask(Long id, Task task) {
-        Task newTask = taskRepository.findById(id)
+    public void updateTask(Long id, TaskUpdateRequest request) {
+        Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(
                         String.format("کار با شناسه %d یافت نشد.", id)
                 ));
-        newTask.setTitle(task.getTitle());
-        newTask.setDescription(task.getDescription());
-        taskRepository.save(newTask);
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
+        if (request.getState() != null) {
+            task.setTaskState(request.getState());
+        }
+        taskRepository.save(task);
     }
 
     public List<Task> getTasksByListId(Long listId) {

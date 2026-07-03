@@ -1,8 +1,10 @@
 package com.samadihadis.todolist_springboot.controller;
 
 
-import com.samadihadis.todolist_springboot.entity.TaskList;
+import com.samadihadis.todolist_springboot.dto.TaskListRequest;
+import com.samadihadis.todolist_springboot.dto.TaskListResponse;
 import com.samadihadis.todolist_springboot.service.TaskListService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +19,19 @@ public class TaskListController {
     private final TaskListService taskListService;
 
     @PostMapping
-    public ResponseEntity<TaskList> createTaskList(@RequestBody TaskList taskList) {
-        TaskList savedTaskList = taskListService.createTaskList(taskList);
-        return ResponseEntity.ok(savedTaskList);
+    public ResponseEntity<TaskListResponse> createTaskList(
+            @Valid @RequestBody TaskListRequest request
+    ) {
+        return ResponseEntity.ok(taskListService.createTaskList(request));
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskList>> getAllTaskLists() {
+    public ResponseEntity<List<TaskListResponse>> getAllTaskLists() {
         return ResponseEntity.ok(taskListService.getAllTaskLists());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskList> getTaskListById(@PathVariable Long id) {
+    public ResponseEntity<TaskListResponse> getTaskListById(@PathVariable Long id) {
         return ResponseEntity.ok(taskListService.getTaskListById(id));
     }
 
@@ -41,10 +44,10 @@ public class TaskListController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTaskList(@RequestBody TaskList taskList, @PathVariable Long id) {
-        taskListService.updateTaskList(id , taskList);
-        return ResponseEntity.ok(
-                String.format("لیست کارها با شناسه %d بروزرسانی شد.", id)
-        );
+    public ResponseEntity<TaskListResponse> updateTaskList(
+            @Valid @RequestBody TaskListRequest request,
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(taskListService.updateTaskList(id, request));
     }
 }
