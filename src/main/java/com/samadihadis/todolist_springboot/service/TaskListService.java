@@ -4,6 +4,7 @@ package com.samadihadis.todolist_springboot.service;
 import com.samadihadis.todolist_springboot.dto.TaskListRequest;
 import com.samadihadis.todolist_springboot.dto.TaskListResponse;
 import com.samadihadis.todolist_springboot.entity.TaskList;
+import com.samadihadis.todolist_springboot.exception.taskList.TaskListNotFoundException;
 import com.samadihadis.todolist_springboot.repository.TaskListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class TaskListService {
 
     private TaskList findById(Long id) {
         return taskListRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new TaskListNotFoundException(
                         String.format("لیست کارها با شناسه %d یافت نشد.", id)
                 ));
     }
