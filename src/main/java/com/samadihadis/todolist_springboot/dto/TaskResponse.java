@@ -14,4 +14,12 @@ public class TaskResponse {
     private String description;
     private TaskState state;
     private String taskListName;
+
+    public TaskResponse(Long id, String title, String description, TaskState state, String taskListName) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.state = state;
+        this.taskListName = taskListName;
+    }
 }
